@@ -5,6 +5,17 @@ All notable changes to the "csv" extension will be documented in this file.
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
 
+## [1.0.1] - 2024-11-08
+
+### Fixed
+- CSV notification now appears immediately when opening CSV files
+- Fixed issue where notification opened wrong file after switching tabs
+- Extension now activates on startup to ensure notifications work correctly
+
+### Changed
+- Added social media links to README
+- Improved CSV file detection with proper language association
+
 ## [1.0.0] - 2025-11-08
 
 ### Added
