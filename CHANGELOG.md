@@ -4,6 +4,46 @@ All notable changes to the "csv" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [Unreleased]
 
-- Initial release
+## [1.0.0] - 2025-11-08
+
+### Added
+
+* **Smart CSV Viewing Interface:** Initial release with a full-featured table view for CSV files
+* **Automatic Format Detection:** Intelligent detection of CSV separators (comma and semicolon)
+* **CSV Detection Listener:** Added an automatic file type detection that suggests opening the CSV Viewer when a `.csv` file is opened
+* **Advanced Sorting Capabilities:**
+    * Multi-type column sorting (text, numbers, dates)
+    * Support for both ISO (YYYY-MM-DD) and European (DD/MM/YYYY) date formats
+    * Dynamic sort direction indicators (A→Z, 0→9) based on column content type
+* **Powerful Filtering System:**
+    * Column-specific filtering
+    * Case-insensitive search
+    * Live filter updates
+
+### Changed
+
+* **Webview UI/UX:**
+    * Modern, responsive interface with VSCode theme integration
+    * Sticky header for better navigation of large datasets
+    * Hover effects for better row tracking
+    * Compact but readable table layout
+* **Filter Interaction:**
+    * Added multiple ways to apply filters (button or Enter key)
+    * Implemented a reset filter button for quick clear
+    * Real-time filter feedback
+* **Data Display:**
+    * Automatic whitespace trimming for cleaner presentation
+    * Row and column count statistics
+    * Empty row filtering for cleaner data presentation
+
+### Fixed
+
+* **Data Handling:**
+    * Proper handling of empty lines in CSV files
+    * Correct processing of whitespace in cell values
+    * Robust path handling for both Unix and Windows file systems
+* **Date Parsing:**
+    * Fixed issues with date recognition and sorting
+    * Improved handling of mixed data types within columns
+
