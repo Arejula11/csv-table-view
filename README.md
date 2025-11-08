@@ -42,25 +42,18 @@ This extension is designed for data analysts and developers who need to inspect 
 
 ### 2. Opening the Viewer
 
-Once installed, open a `.csv` file in your editor. You can launch the table view in three ways:
+Once installed, open a `.csv` file in your editor. You can launch the table view in two ways:
 
 #### A. Command Palette
 
 1. Open the Command Palette (`Ctrl+Shift+P`).
 
 2. Type and select: **`CSV Viewer: Open CSV as Table`**.
+#### B. Push Notification Button
 
-#### B. Editor Title Menu (Quick Button)
+1. After opening a `.csv` file, look for a pop-up notification at the bottom right corner of the editor.
 
-1. Look for the dedicated table icon (or similar) located on the right side of the editor tab title bar when a CSV file is active.
-
-2. Click the button to open the table viewer instantly.
-
-#### C. Context Menu (Right-Click)
-
-1. Right-click anywhere inside the open `.csv` file.
-
-2. Select **`Open CSV as Table`** from the context menu.
+2. Click the **`Open CSV as Table`** button in the notification to launch the table viewer.
 
 ## Development & Contribution
 
