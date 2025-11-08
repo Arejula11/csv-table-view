@@ -159,6 +159,18 @@ function showCsvTable(filePath: string) {
         <div class="header">
           <h2>${filePathShort}</h2>
           <div class="controls">
+            <label for="filterColumn" style="font-size: 0.9rem; margin-right: 0.3rem;">Filter by:</label>
+            <select id="filterColumn">
+              <option value="">-- None --</option>
+              ${rows[0].map((h, i) => `<option value="${i}">${h.trim()}</option>`).join('')}
+            </select>
+            <label for="filterValue" style="font-size: 0.9rem; margin-left: 0.5rem; margin-right: 0.3rem;">Value:</label>
+            <input type="text" id="filterValue" style="font-size: 0.9rem; padding: 0.4rem; border: 1px solid var(--vscode-input-border); border-radius: 2px;">
+            <button id="applyFilter" style="font-size: 0.9rem; padding: 0.4rem 0.6rem; border: 1px solid var(--vscode-input-border); border-radius: 2px; background: var(--vscode-button-background); color: var(--vscode-button-foreground); cursor: pointer;">Apply</button>
+            <button id="resetFilter" style="font-size: 0.9rem; padding: 0.4rem 0.6rem; border: 1px solid var(--vscode-input-border); border-radius: 2px; background: var(--vscode-button-background); color: var(--vscode-button-foreground); cursor: pointer;">Reset</button>
+
+
+
             <label for="sortColumn" style="font-size: 0.9rem; margin-right: 0.3rem;">Sort by:</label>
             <select id="sortColumn">
               <option value="">-- None --</option>
@@ -190,33 +202,40 @@ function showCsvTable(filePath: string) {
       </div>
 
       <script>
+        // 1. Datos Originales Inmutables
         const originalData = ${JSON.stringify(rows.slice(1).filter(r => r.some(c => c.trim())))};
+        
+        // 2. Elementos DOM
         const sortColumn = document.getElementById('sortColumn');
         const sortOrder = document.getElementById('sortOrder');
+        const filterColumn = document.getElementById('filterColumn');
+        const filterValue = document.getElementById('filterValue');
+        const applyFilterBtn = document.getElementById('applyFilter');
+        const resetFilterBtn = document.getElementById('resetFilter');
         const tableBody = document.getElementById('tableBody');
 
-        // --- Función de ayuda para parsear DD/MM/YYYY o DD-MM-YYYY ---
+        // 3. Estado de la Aplicación (El filtro se aplica al original, la ordenación al resultado)
+        let currentFilteredData = [...originalData];
+
+
+        // --- Helper para parsear DD/MM/YYYY o DD-MM-YYYY ---
         function parseEuropeanDate(dateString) {
-            // Expresión regular para DD/MM/YYYY o DD-MM-YYYY o DD.MM.YYYY
             const parts = dateString.match(/^(\\d{2})[./-](\\d{2})[./-](\\d{4})$/);
             if (parts) {
-                // new Date(Año, Mes-1, Día)
                 return new Date(parts[3], parts[2] - 1, parts[1]);
             }
             return null;
         }
-        // -------------------------------------------------------------------
 
 
         function isNumericColumn(colIndex) {
-          // Verificar si la mayoría de valores en la columna son numéricos
           const samples = originalData.slice(0, Math.min(100, originalData.length));
           const numericCount = samples.filter(row => {
             const val = row[colIndex];
             return val && !isNaN(parseFloat(val.trim()));
           }).length;
           
-          return numericCount / samples.length > 0.5; // Más del 50% numéricos
+          return numericCount / samples.length > 0.5;
         }
 
         function updateSortOrderLabels() {
@@ -238,78 +257,108 @@ function showCsvTable(filePath: string) {
             descOption.textContent = descOption.getAttribute('data-text');
           }
         }
+        
+        // -------------------------------------------------------------------
+        // --- FUNCIÓN CENTRAL: Aplica FILTRO y luego ORDENACIÓN ---
+        // -------------------------------------------------------------------
 
-        function sortTable() {
-          console.log('Sorting table');
+        function applyFilter() {
+          const colIndex = parseInt(filterColumn.value);
+          const value = filterValue.value.trim().toLowerCase();
+          
+          if (isNaN(colIndex) || !value) {
+            // Si no hay filtro, usar datos originales
+            currentFilteredData = [...originalData];
+          } else {
+            // Si hay filtro, filtrar los datos originales
+            currentFilteredData = originalData.filter(row => {
+              const cell = (row[colIndex] || '').trim().toLowerCase();
+              return cell.includes(value);
+            });
+          }
+          // Llama a la función principal para que aplique la ordenación
+          updateTable();
+        }
+
+        function resetFilter() {
+          filterColumn.value = '';
+          filterValue.value = '';
+          applyFilter(); // Vuelve a aplicar (esto reseteará currentFilteredData a originalData)
+        }
+
+
+        function updateTable() {
+          console.log('Updating table: Applying sort to filtered data.');
           const colIndex = parseInt(sortColumn.value);
           const order = sortOrder.value;
 
           updateSortOrderLabels();
-
+          
+          // La ordenación se realiza SIEMPRE sobre currentFilteredData
+          let dataToRender = [...currentFilteredData];
+          
           if (isNaN(colIndex)) {
-            // Sin ordenar - mostrar datos originales
-            renderTable(originalData);
+            // No hay columna de ordenación seleccionada, renderizar currentFilteredData como está
+            render(dataToRender);
             return;
           }
 
-          const sorted = [...originalData].sort((a, b) => {
+          // Aplicar lógica de ordenación
+          const sorted = dataToRender.sort((a, b) => {
             const aVal = (a[colIndex] || '').trim();
             const bVal = (b[colIndex] || '').trim();
             
-            // --- Lógica de Detección y Comparación de Fechas (Mejorada) ---
+            // Lógica de Fechas
             const isoDateRegex = /^\\d{4}-\\d{2}-\\d{2}$/; // YYYY-MM-DD
-            
-            let aDate = null;
-            let bDate = null;
-            
-            // 1. Intentar formato ISO (YYYY-MM-DD)
-            if (isoDateRegex.test(aVal)) {
-                aDate = new Date(aVal);
-            } else {
-                // 2. Intentar formato Europeo (DD/MM/YYYY, etc.)
-                aDate = parseEuropeanDate(aVal);
-            }
+            let aDate = isoDateRegex.test(aVal) ? new Date(aVal) : parseEuropeanDate(aVal);
+            let bDate = isoDateRegex.test(bVal) ? new Date(bVal) : parseEuropeanDate(bVal);
 
-            if (isoDateRegex.test(bVal)) {
-                bDate = new Date(bVal);
-            } else {
-                bDate = parseEuropeanDate(bVal);
-            }
-
-            // Si ambas son fechas válidas (no Invalid Date)
             if (aDate && bDate && !isNaN(aDate.getTime()) && !isNaN(bDate.getTime())) {
                 const comparison = aDate.getTime() - bDate.getTime();
                 return order === 'asc' ? comparison : -comparison;
             }
-            // -------------------------------------------------------------------
 
-
-            // Intentar comparar como números si no son fechas
+            // Lógica de Números
             const aNum = parseFloat(aVal);
             const bNum = parseFloat(bVal);
             if (!isNaN(aNum) && !isNaN(bNum)) {
                 return order === 'asc' ? aNum - bNum : bNum - aNum;
             }
 
-            
-
-            // Comparar como strings (por defecto)
+            // Lógica de Strings (por defecto)
             const comparison = aVal.localeCompare(bVal);
             return order === 'asc' ? comparison : -comparison;
           });
 
 
-          renderTable(sorted);
+          render(sorted);
         }
 
-        function renderTable(data) {
+        function render(data) {
           tableBody.innerHTML = data.map(row => 
             \`<tr>\${row.map(cell => \`<td>\${cell.trim()}</td>\`).join('')}</tr>\`
           ).join('');
         }
+        
+        // -------------------------------------------------------------------
+        // --- LISTENERS ---
+        // -------------------------------------------------------------------
 
-        sortColumn.addEventListener('change', sortTable);
-        sortOrder.addEventListener('change', sortTable);
+        sortColumn.addEventListener('change', updateTable);
+        sortOrder.addEventListener('change', updateTable);
+        applyFilterBtn.addEventListener('click', applyFilter);
+        resetFilterBtn.addEventListener('click', resetFilter);
+        
+        // Permite aplicar el filtro al presionar Enter en el campo de valor
+        filterValue.addEventListener('keyup', (event) => {
+             if (event.key === 'Enter') {
+                 applyFilter();
+             }
+        });
+
+        // Renderizar tabla inicial (sin filtro y sin ordenar)
+        updateTable();
+        
       </script>
     </body>
     </html>

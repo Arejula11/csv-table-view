@@ -14,6 +14,7 @@ This extension transforms raw CSV file content into a sortable, easy-to-read HTM
 
   * **Clean Table View:** Converts your comma (`,`) or semicolon (`;`) delimited CSV data into a well-structured, easy-to-read table.
   * **Automatic Delimiter Detection:** Automatically detects if your file uses commas or semicolons as separators.
+  * **Filtering**: Filter rows based on column values using a simple text input.
   * **Interactive Sorting:** Sort any column in **ascending** or **descending** order.
       * **Smart Type Handling:** Correctly sorts columns as **Numbers**, **Text**, or **Dates**.
       * **European Date Support:** Correctly identifies and sorts dates in common European formats (e.g., `DD/MM/YYYY`, `DD-MM-YYYY`, `DD.MM.YYYY`), in addition to standard ISO format (`YYYY-MM-DD`).
