@@ -1,0 +1,4 @@
+fecha,nombre,color,ciudad,estado,pais,vacaciones,enfermo,direccion,telefono,hijos,horario,cumpleanos,fecha_inicio
+2025-11-07,Ana,Rojo,Madrid,Comunidad de Madrid,España,5,false,Calle Falsa 123,600123456,2,9:00-17:00,15-05-1990,01/01/2025
+2025-11-08,Luis,Azul,Barcelona,Cataluña,España,10,true,Avenida Siempre Viva 742,600987654,1,10:00-18:00,20-08-1985,02/01/2025
+2025-11-09,Marta,Verde,Valencia,Comunidad Valenciana,España,0,false,Calle Gran Via 1,600456789,0,8:00-16:00,30-12-1992,03/01/2025

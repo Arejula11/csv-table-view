@@ -19,22 +19,56 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(disposable);
 
   // --- Listener para sugerir ejecutar la extensión ---
-  vscode.window.onDidChangeActiveTextEditor(editor => {
-    if (!editor) return;
-    const doc = editor.document;
-    // Solo para CSV
+  const openSpecificCsvCommand = vscode.commands.registerCommand(
+    'csv-viewer.openSpecificCsv', 
+    (filePath: string) => {
+      showCsvTable(filePath);
+    }
+  );
+  context.subscriptions.push(openSpecificCsvCommand);
+
+  // Helper function to check and show prompt
+  const checkAndPromptCsv = (doc: vscode.TextDocument) => {
     if (doc.languageId === 'csv' || doc.fileName.endsWith('.csv')) {
-      // Mostrar un mensaje de información con acción
+      // Capture the CSV file path NOW
+      const csvFilePath = doc.fileName;
+      const fileName = csvFilePath.split(/[/\\]/).pop();
+      
       vscode.window.showInformationMessage(
-        `CSV file detected: "${doc.fileName.split('/').pop()}"`,
+        `CSV file detected: "${fileName}"`,
         'Open CSV Viewer'
       ).then(selection => {
         if (selection === 'Open CSV Viewer') {
-          vscode.commands.executeCommand('csv-viewer.openAsTable');
+          // Use the captured file path, not the currently active editor
+          vscode.commands.executeCommand('csv-viewer.openSpecificCsv', csvFilePath);
         }
       });
     }
-  });
+  };
+
+  // Check currently active editor when extension activates
+  if (vscode.window.activeTextEditor) {
+    checkAndPromptCsv(vscode.window.activeTextEditor.document);
+  }
+
+  // Listen for editor changes
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+      if (editor) {
+        checkAndPromptCsv(editor.document);
+      }
+    })
+  );
+
+  // Listen for newly opened documents
+  context.subscriptions.push(
+    vscode.workspace.onDidOpenTextDocument(doc => {
+      // Only prompt if this document is in the active editor
+      if (vscode.window.activeTextEditor?.document === doc) {
+        checkAndPromptCsv(doc);
+      }
+    })
+  );
 }
 
 // --- Función que crea la webview ---

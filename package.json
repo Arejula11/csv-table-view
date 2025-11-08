@@ -31,7 +31,8 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:csv"
+    "onLanguage:csv",
+    "onLanguage:plaintext"
   ],
   "main": "./dist/extension.js",
   "contributes": {
