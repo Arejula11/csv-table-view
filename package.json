@@ -1,12 +1,33 @@
 {
   "name": "csv-table-viewer",
   "displayName": "CSV Table Viewer",
-  "description": "Display CSV files as clean, interactive tables inside VS Code.",
-  "version": "0.0.1",
+  "description": "Display CSV files as clean, interactive tables inside VS Code, supporting filtering and smart sorting for numbers, text, and European dates.",
+  "version": "1.0.0",
+  "publisher": "Arejula11",
+  "icon": "public/assets/favicon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Arejula11/csv-table-viewer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Arejula11/csv-table-viewer/issues"
+  },
+  "homepage": "https://github.com/Arejula11/csv-table-viewer#readme",
+  "license": "MIT",
+  "keywords": [
+    "csv",
+    "table",
+    "viewer",
+    "data",
+    "sort",
+    "filter",
+    "spreadsheet"
+  ],
   "engines": {
     "vscode": "^1.105.1"
   },
   "categories": [
+    "Data Science",
     "Other"
   ],
   "activationEvents": [
