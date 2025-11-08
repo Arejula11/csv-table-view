@@ -2,7 +2,22 @@
 <img src="https://github.com/Arejula11/csv-table-view/blob/main/public/assets/logo.png?raw=true" height="150" alt="CSV Table Viewer Icon"/>
 </p>
 
-# CSV Table Viewer
+<h1 align="center">CSV Table Viewer</h1>
+<p align="center">
+  <a href="https://are-dev.es">
+    <img src="https://img.shields.io/badge/Website-are--dev.es-blue?style=flat-square" alt="Website">
+  </a>
+  <a href="https://www.linkedin.com/in/miguel-arejula-aisa-653088291">
+    <img src="https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin" alt="LinkedIn">
+  </a>
+  <a href="https://github.com/Arejula11">
+    <img src="https://img.shields.io/badge/GitHub-Follow-181717?style=flat-square&logo=github" alt="GitHub">
+  </a>
+  <a href="https://www.youtube.com/@are-dev">
+    <img src="https://img.shields.io/badge/YouTube-Subscribe-FF0000?style=flat-square&logo=youtube" alt="YouTube">
+</p>
+
+
 
 ### **Quickly Transform Raw CSV Data into Interactive, Sortable Tables inside VS Code.**
 
