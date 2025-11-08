@@ -1,5 +1,9 @@
-# CSV Table Viewer for VS Code
+<p align="center">
+  <img src="public/assets/logo.png" height="150" alt="CSV Table Viewer Logo"/>
+</p>
 
+
+# CSV Table Viewer for VS Code
 Display CSV files as clean, interactive tables inside VS Code.
 
 This extension transforms raw CSV file content into a sortable, easy-to-read HTML table view directly within a VS Code Webview Panel. Perfect for quickly inspecting and understanding large datasets without leaving your editor.
