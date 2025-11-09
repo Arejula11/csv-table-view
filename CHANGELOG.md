@@ -4,6 +4,12 @@ All notable changes to the "csv" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [1.0.3] - 2025-11-09
+### Added
+- Custom favicon for the CSV Viewer webview tab.
+### Fixed
+- Fix bug in file path handling on Windows systems
+
 ## [1.0.2] - 2025-11-08
 ### Fixed
 - Corrected `CHANGELOG.md` date of version 1.0.1
