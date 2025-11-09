@@ -124,6 +124,7 @@ function showCsvTable( context: vscode.ExtensionContext, filePath: string) {
           margin-bottom: 1.5rem;
           padding-bottom: 1rem;
           border-bottom: 1px solid var(--vscode-panel-border);
+          margin-top: 1rem;
         }
         h2 {
           font-size: 1.1rem;
