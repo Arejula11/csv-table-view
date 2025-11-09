@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 
 export function activate(context: vscode.ExtensionContext) {
-  // --- Registrar el comando ---
+  // Defines the command
   const disposable = vscode.commands.registerCommand('csv-viewer.openAsTable', () => {
     const editor = vscode.window.activeTextEditor;
     if (!editor) {
@@ -14,15 +14,15 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showErrorMessage('This command only works with CSV files.');
       return;
     }
-    showCsvTable(editor.document.uri.fsPath);
+    showCsvTable(context,editor.document.uri.fsPath);
   });
   context.subscriptions.push(disposable);
 
-  // --- Listener para sugerir ejecutar la extensión ---
+  // Listener for opening specific CSV files
   const openSpecificCsvCommand = vscode.commands.registerCommand(
     'csv-viewer.openSpecificCsv', 
     (filePath: string) => {
-      showCsvTable(filePath);
+      showCsvTable(context,filePath);
     }
   );
   context.subscriptions.push(openSpecificCsvCommand);
@@ -71,12 +71,12 @@ export function activate(context: vscode.ExtensionContext) {
   );
 }
 
-// --- Función que crea la webview ---
-function showCsvTable(filePath: string) {
+// Function to show CSV content in a webview panel
+function showCsvTable( context: vscode.ExtensionContext, filePath: string) {
   const filePathShort = filePath.split(/[/\\]/).pop() || filePath;
   const content = fs.readFileSync(filePath, 'utf8');
 
-  // Detectar separador
+  // Detect separator (comma or semicolon)
   const firstLine = content.split('\n')[0];
   const separator = firstLine.includes(';') ? ';' : ',';
   const rows = content.split('\n').map(r => r.split(separator));
@@ -87,6 +87,13 @@ function showCsvTable(filePath: string) {
     vscode.ViewColumn.Active,
     { enableScripts: true }
   );
+
+  // Set icons for light and dark themes
+  panel.iconPath = {
+  light: vscode.Uri.joinPath(context.extensionUri, 'public', 'assets', 'logo.png'),
+  dark: vscode.Uri.joinPath(context.extensionUri, 'public', 'assets', 'logo.png')
+};
+
 
   panel.webview.html = `
     <!DOCTYPE html>
